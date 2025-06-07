@@ -1,0 +1,67 @@
+/* === RESET & BASE === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background-color: #f3f4f6; /* Tailwind's bg-gray-100 */
+  font-family: 'Inter', sans-serif;
+  color: #1f2937; /* Tailwind's text-gray-800 */
+}
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: left; /* ❌ remove forced center, use Tailwind instead */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === LOGO STYLES (if used) === */
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 1.5rem rgba(100, 108, 255, 0.7));
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 1.5rem rgba(97, 218, 251, 0.7));
+}
+
+/* === LOGO SPIN ANIMATION === */
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+/* === COMPONENT STUBS === */
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.read-the-docs {
+  color: #6b7280; /* Tailwind's text-gray-500 */
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
