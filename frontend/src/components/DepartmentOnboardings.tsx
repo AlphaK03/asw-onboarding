@@ -7,6 +7,10 @@ interface Onboarding {
     title: string;
     description: string;
 }
+interface Department {
+    id: number;
+    name: string;
+}
 
 export default function DepartmentOnboardings() {
     const { id } = useParams(); // departmentId
@@ -14,6 +18,8 @@ export default function DepartmentOnboardings() {
 
     const [onboardings, setOnboardings] = useState<Onboarding[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [department, setDepartment] = useState<Department | null>(null);
+    const [error, setError] = useState("");
 
     // 🔥 Modal control
     const [editing, setEditing] = useState<Onboarding | null>(null);
@@ -23,11 +29,25 @@ export default function DepartmentOnboardings() {
     useEffect(() => {
         if (id) {
             setIsLoading(true);
+            setError("");
+
             axios
                 .get(`/api/onboardings/by-department/${id}`)
                 .then((res) => setOnboardings(res.data))
-                .catch((err) => console.error("Error loading onboardings", err))
+                .catch((err) => {
+                    console.error("Error loading onboardings", err);
+                    setError("Failed to load onboardings.");
+                })
                 .finally(() => setIsLoading(false));
+
+            axios
+                .get(`/api/departments/${id}`)
+                .then((res) => setDepartment(res.data))
+                .catch((err) => {
+                    console.error("Error loading department", err);
+                    setDepartment(null);
+                    setError("Failed to load department.");
+                });
         }
     }, [id]);
 
@@ -38,7 +58,8 @@ export default function DepartmentOnboardings() {
     };
 
     const saveEdit = async () => {
-        if (!editing) return;
+        if (!editing || !editTitle.trim()) return;
+
         try {
             const updated = { ...editing, title: editTitle, description: editDescription };
             await axios.put(`/api/onboardings/${editing.id}`, updated);
@@ -48,6 +69,7 @@ export default function DepartmentOnboardings() {
             setEditing(null);
         } catch (err) {
             console.error("Error saving onboarding update", err);
+            setError("Error updating onboarding.");
         }
     };
 
@@ -63,8 +85,12 @@ export default function DepartmentOnboardings() {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-10 px-4 sm:px-6 lg:px-8 relative">
             <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-6 sm:p-10 border border-gray-100">
                 <h2 className="text-2xl sm:text-3xl font-bold text-center text-blue-700 mb-8">
-                    📋 Onboardings for Department #{id}
+                    📋 Onboardings for <span className="text-indigo-700">{department?.name ?? "..."}</span>
                 </h2>
+
+                {error && (
+                    <p className="text-red-600 text-sm text-center mb-4">{error}</p>
+                )}
 
                 {isLoading ? (
                     <p className="text-center text-gray-500 italic">Loading...</p>
@@ -107,7 +133,7 @@ export default function DepartmentOnboardings() {
 
             {/* 🧾 Modal flotante para edición */}
             {editing && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 px-4">
                     <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md animate-fadeIn">
                         <h3 className="text-xl font-bold text-indigo-700 mb-4">✏️ Edit Onboarding</h3>
                         <input

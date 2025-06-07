@@ -63,7 +63,7 @@ public class OnboardingStepController {
             toSave.add(existing);
         }
 
-        stepRepository.saveAll(toSave); // Guardamos solo los actualizados correctamente
+        stepRepository.saveAll(toSave);
         return ResponseEntity.ok().build();
     }
 

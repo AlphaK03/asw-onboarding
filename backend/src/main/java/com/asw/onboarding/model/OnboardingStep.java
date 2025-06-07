@@ -20,10 +20,10 @@ public class OnboardingStep {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;         // Título del paso
-    private String content;       // Contenido explicativo
-    private String description;   // Descripción adicional
-    private String mediaUrl;      // Enlace multimedia
+    private String title;
+    private String content;
+    private String description;
+    private String mediaUrl;
     private int orderNumber;
 
     @ManyToOne
